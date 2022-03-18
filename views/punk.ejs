@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <%- 
+    include('./component/meta', {
+      appTitle: appTitle, 
+      appDescription: appDescription, 
+      ogTitle: ogTitle, 
+      ogDescription: ogDescription, 
+      ogUrl: ogUrl, 
+      ogImage: ogImage
+    }); 
+    -%>
+  </head>
+  <body class="d-flex text-white bg-dark" style="min-height: 100%;">
+    
+    <div class="container d-flex w-100 p-3 mx-auto flex-column" style="min-height: 100%; max-width: 72em;">
+      <%- include('./component/header'); -%>
+      <main class="px-3" style="min-height: 100%;">
+        <div style="max-width: 42rem; margin-top: 5rem; margin-left: auto; margin-right: auto;">
+          <div class="row">
+            <% if (!_.isEmpty(punk)) { %>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12 mb-2" style="padding-left: 30px; padding-right: 30px;">
+              <div>
+                <h3 class="punk-rank">Rank #<%= punk.rarity_rank %></h3>
+                <% if (content_image_is_video) { %>
+                <video class="punk-avatar" style="<% if (content_image_frame=='rectangle') { %> border-radius: 10px; <% } %>" src="<%= punk.image.replace('ipfs://', 'https://ipfs.io/ipfs/'); %>" alt="<%= punk.name %>" /></video>
+                <% } else { %>
+                <img class="punk-avatar" style="<% if (content_image_frame=='rectangle') { %> border-radius: 10px; <% } %>" src="<%= punk.image.replace('ipfs://', 'https://ipfs.io/ipfs/'); %>" alt="<%= punk.name %>" />
+                <% } %>
+                <div class="punk-info text-center mt-4">
+                  <span><%= punk.name %></span>
+                </div>
+              </div>
+              <div class="mt-3 mb-3">
+                <!--
+                <div class="punk-description dont-break-out">
+                  <%- md.render(punk.description) %>
+                </div>
+                -->
+                <% if (!_.isEmpty(collection_contract_address)) { %>
+                <a class="view-on-link" href="https://opensea.io/assets/<%= collection_contract_address %>/<%= punk.id %>" target="_blank">
+                  <div class="view-on-block text-center">
+                    <img class="view-on-icon" src="/images/opensea.svg">
+                    View on OpenSea
+                  </div>
+                </a>
+                <% } %>
+                <% if (!_.isEmpty(punk.external_url)) { %>
+                <a class="view-on-link" href="<%= punk.external_url %>" target="_blank">
+                  <div class="view-on-block text-center">
+                    <img class="view-on-icon" src="/images/profile@32w.png">
+                    View on Official Site
+                  </div>
+                </a>
+                <% } %>
+                <%
+                let jsonUrl = punk.id+'/json';
+                if (trait_normalization == 1) {
+                  jsonUrl = jsonUrl+'?trait_normalization=1';
+                }
+                let similarUrl = punk.id+'/similar';
+                if (trait_normalization == 1) {
+                  similarUrl = similarUrl+'?trait_normalization=1';
+                }
+                %>
+                <div class="row">
+                  <div class="col-6" style="padding-right: 5px;">
+                    <a class="view-on-link" href="/<%= item_path_name %>/<%= jsonUrl %>" target="_blank">
+                      <div class="view-on-block text-center">
+                        JSON
+                      </div>
+                    </a>
+                  </div>
+                  <div class="col-6" style="padding-left: 5px;">
+                    <a class="view-on-link" href="/<%= item_path_name %>/<%= similarUrl %>">
+                      <div class="view-on-block text-center">
+                        Similar
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12 mb-2" >
+              <div class="rarity-score-block">
+                <h4 class="text-center">Rarity Score</h4>
+                <div class="rarity-score-sum">
+                    <%= punkScore.rarity_sum.toFixed(2) %>
+                </div>
+              </div>
+              <% allTraitTypes.forEach(function(traitType) { %>
+                <div class="mt-4">
+                  <div class="row">
+                    <div class="col-6">
+                      <h3 class="trait-type"><%= traitType.trait_type %></h3>
+                    </div>
+                    <div class="col-6 trait-type-rarity">
+                      +<%= punkScore['trait_type_'+traitType.id+'_rarity'].toFixed(2) %>
+                    </div>
+                  </div>
+                  <div class="d-flex trait-value-block">
+                    <div class="flex-grow-1 trait-value">
+                      <% if (punkTraitData.hasOwnProperty(traitType.id)) { %>
+                        <%
+                        if (traitType.trait_data_type == 'date') {
+                          let date = new Date((punkTraitData[traitType.id]-29)*1000);
+                          %>
+                          <%= date.toLocaleString("en-US") %>
+                          <%
+                        } else {
+                          %>
+                          <%= punkTraitData[traitType.id] %>
+                          <%
+                        }
+                        %>
+                      <% } else { %>
+                        None (Missing Trait)
+                      <% } %>
+                    </div>
+                    <div class="trait-value-count">
+                      <% if (punkTraitData.hasOwnProperty(traitType.id)) { %>
+                        <%= allDetailTraitTypesData[traitType.id+'|||'+punkTraitData[traitType.id]] %>
+                      <% } else { %>
+                        <%= (totalPunkCount-traitType.punk_count) %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+              <div class="mt-4">
+                <div class="row">
+                  <div class="col-6">
+                    <h3 class="trait-type">Attribute Count</h3>
+                  </div>
+                  <div class="col-6 trait-type-rarity">
+                    +<%= punkScore['trait_count_rarity'].toFixed(2) %>
+                  </div>
+                </div>
+                <div class="d-flex trait-value-block">
+                  <div class="flex-grow-1 trait-value">
+                    <%= Object.keys(ignoredPunkTraitData).length %>
+                  </div>
+                  <div class="trait-value-count">
+                    <%= allTraitCountTypesData[Object.keys(ignoredPunkTraitData).length] %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } else { %>
+              <h1 class="text-center">
+                There's no result.
+              </h1>
+            <% } %>
+          </div>
+        </div>
+      </main>
+      <%- include('./component/footer'); -%>
+    </div>
+  </body>
+</html>
