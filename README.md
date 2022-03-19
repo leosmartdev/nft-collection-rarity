@@ -4,6 +4,10 @@ Cool Rarity is an open source package for easy rarity score calculation.
 
 Cool Rarity was born in a [Hackathon](https://github.com/punkscape/01-rarity-analyser-hackathon) hosted by [PunkScape](https://punkscape.xyz/), made with love by [Fukuball](https://twitter.com/fukuball). It is easy to configure for developers and easy to use for users, any ERC721 NFT collection with [OpenSea metadata stardard](https://docs.opensea.io/docs/metadata-standards) can use Cool Rarity as the rarity score calculation tool. If you have the collection metadata in hand, you can depoly Cool Rarity as your collection rarity tool in minues!
 
+Here's the live site deployed:
+
+- [https://nft-collection-rarity.herokuapp.com/](https://nft-collection-rarity.herokuapp.com/)
+
 Here's the demo:
 
 - One Day Punk rarity website: [https://onedaypunk.coolrarity.com/](https://onedaypunk.coolrarity.com/)
@@ -14,7 +18,7 @@ Here's the demo:
 
 Cool Rarity was built using Node.js, so you have to install:
 
-- Node.js (v14.x)
+- Node.js (v12.x^)
 - NPM
 
 I personally use Yarn and NVM, so you can consider install them too:
@@ -27,12 +31,12 @@ I personally use Yarn and NVM, so you can consider install them too:
 ### Step 1: Clone from GitHub
 
 ```
-$ git clone https://github.com/fukuball/rarity-analyser.git
+$ git clone https://github.com/leosultanov/nft-collection-rarity.git
 ```
 
 ### Step 2: Configure collection data
 
-You should have the collection metadata on hand, or you can use the default [collection.json](https://github.com/fukuball/rarity-analyser/blob/main/config/collection.json) provided by Cool Rarity, be sure your collection metadata is formated like the default collection.json.
+You should have the collection metadata on hand, or you can use the default [collection.json](https://github.com/leosultanov/nft-collection-rarity/blob/main/config/collection.json) provided by Cool Rarity, be sure your collection metadata is formated like the default collection.json.
 
 Put your collection metadata json file (all token metadata in one json file!) in `config` folder, the same location as the default collection.json, then open the `config.js` in the folder, modify it for your collection.
 
@@ -117,7 +121,7 @@ If you have any update want to deploy to Heroku, just use this final step to dep
 
 Here you can deploy this rarity tool to Heroku in one click, just be sure you have the Heroku account.
 
-<a href="https://heroku.com/deploy?template=https://github.com/fukuball/rarity-analyser" target="_blank">
+<a href="https://heroku.com/deploy?template=https://github.com/leosultanov/nft-collection-rarity" target="_blank">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 </a>
 
@@ -125,7 +129,7 @@ Here you can deploy this rarity tool to Heroku in one click, just be sure you ha
 
 ### Hackathon Tasks
 
-- [X] The app lets the deployer configure a collection json file like this one: [collection.json](https://github.com/fukuball/rarity-analyser/blob/main/config/collection.json)
+- [X] The app lets the deployer configure a collection json file like this one: [collection.json](https://github.com/leosultanov/nft-collection-rarity/blob/main/config/collection.json)
 - [X] Take all metadata items and analyse their `attributes`.
 - [X] Derive a rarity score for each attribute of each NFT item. Example: Property "Type", Attribute "Ape"; 24 of 10000 have this attribute/property combination; `rarity_score = 1/(24/10000) = 416.67`
 - [X] Derive a rarity score for each NFT in the collection. The rarity score for each NFT is the **sum of all attributes**.
